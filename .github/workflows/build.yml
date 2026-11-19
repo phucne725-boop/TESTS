@@ -1,11 +1,13 @@
 
-name: PSSMP Build
+name: PSSMP Core Build
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -13,55 +15,67 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      # 1. Lấy source từ GitHub
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # 2. Cài Java 25
       - name: Setup Java 25
         uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '25'
 
-      - name: Extract source ZIP
+      # 3. Cài Maven
+      - name: Setup Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: '3.9.9'
+
+      # 4. Giải nén ZIP source
+      - name: Extract PSSMP Source
         run: |
           mkdir -p source
-          ZIP_COUNT=$(find . -maxdepth 1 -type f -iname "*.zip" | wc -l)
 
-          if [ "$ZIP_COUNT" -ne 1 ]; then
-            echo "Expected exactly one source ZIP, found $ZIP_COUNT"
+          ZIP_FILE=$(find . -maxdepth 1 -type f -iname "*.zip" | head -n 1)
+
+          if [ -z "$ZIP_FILE" ]; then
+            echo "ERROR: Cannot find source ZIP!"
             exit 1
           fi
 
-          ZIP_FILE=$(find . -maxdepth 1 -type f -iname "*.zip" | head -n 1)
-          unzip -q "$ZIP_FILE" -d source
+          echo "Extracting: $ZIP_FILE"
+          unzip -o "$ZIP_FILE" -d source
 
-      - name: Find pom.xml
+      # 5. Tìm pom.xml
+      - name: Locate Maven Project
         id: project
         run: |
           POM=$(find source -name pom.xml -print -quit)
 
           if [ -z "$POM" ]; then
-            echo "ERROR: No pom.xml found inside ZIP"
+            echo "ERROR: pom.xml not found!"
             exit 1
           fi
 
+          echo "Found pom.xml: $POM"
           echo "pom=$POM" >> "$GITHUB_OUTPUT"
-          echo "Found: $POM"
 
-      - name: Build with Maven
-        run: mvn -B -f "${{ steps.project.outputs.pom }}" clean package -DskipTests
-
-      - name: Collect JAR
+      # 6. Build plugin
+      - name: Build PSSMP
         run: |
-          mkdir -p build-artifacts
-          find source -path "*/target/*.jar" -type f \
-            ! -name "*-sources.jar" \
-            ! -name "*-javadoc.jar" \
-            -exec cp {} build-artifacts/ \;
+          mvn -B -U -f "${{ steps.project.outputs.pom }}" clean package -DskipTests
 
-      - name: Upload JAR
+      # 7. Tìm và kiểm tra JAR
+      - name: Verify JAR
+        run: |
+          find source -path "*/target/*.jar" -type f
+          test -n "$(find source -path "*/target/*.jar" -type f ! -name '*-sources.jar' ! -name '*-javadoc.jar')"
+
+      # 8. Xuất JAR
+      - name: Upload PSSMP JAR
         uses: actions/upload-artifact@v4
         with:
-          name: PSSMP-Build
-          path: build-artifacts/*.jar
+          name: PSSMP-Core-1.0
+          path: source/**/target/*.jar
           if-no-files-found: error
