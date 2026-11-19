@@ -1,5 +1,5 @@
 
-name: PSSMP Build All
+name: PSSMP Core Build
 
 on:
   workflow_dispatch:
@@ -16,9 +16,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: API-Part1
-            zip: PSSMP_API_1.0_Part1.zip
-
           - name: Core-Part2
             zip: PSSMP_Core_1.0_Part2.zip
 
@@ -34,20 +31,22 @@ jobs:
         with:
           distribution: temurin
           java-version: '25'
+          cache: maven
 
       - name: Check ZIP
+        shell: bash
         run: |
-          test -f "${{ matrix.zip }}" || {
+          if [ ! -f "${{ matrix.zip }}" ]; then
             echo "::error::Missing ZIP: ${{ matrix.zip }}"
             exit 1
-          }
+          fi
 
       - name: Extract ZIP
         run: |
           mkdir -p build-source
           unzip -q "${{ matrix.zip }}" -d build-source
 
-      - name: Find pom.xml
+      - name: Find Maven Project
         id: project
         shell: bash
         run: |
@@ -59,28 +58,44 @@ jobs:
           fi
 
           echo "pom=$POM" >> "$GITHUB_OUTPUT"
-          echo "Found Maven project: $POM"
+          echo "Found project: $POM"
+
+      - name: Fix Paper API Version
+        shell: bash
+        run: |
+          POM="${{ steps.project.outputs.pom }}"
+
+          sed -i \
+            's/26\.1\.2-R0\.1-SNAPSHOT/[26.3.build,)/g' \
+            "$POM"
+
+          echo "Paper API dependency:"
+          grep -n -A2 -B2 "paper-api" "$POM"
 
       - name: Build with Maven
         run: |
-          mvn -B -f "${{ steps.project.outputs.pom }}" clean package -DskipTests
+          mvn -U -B \
+            -f "${{ steps.project.outputs.pom }}" \
+            clean package -DskipTests
 
       - name: Find JAR
         id: jar
         shell: bash
         run: |
-          JAR=$(find build-source -type f -path '*/target/*.jar' \
-            ! -name 'original-*.jar' | head -n 1)
+          JAR=$(find build-source -type f \
+            -path '*/target/*.jar' \
+            ! -name 'original-*.jar' \
+            | head -n 1)
 
           if [ -z "$JAR" ]; then
-            echo "::error::Build did not produce a JAR"
+            echo "::error::No JAR produced"
             exit 1
           fi
 
           echo "path=$JAR" >> "$GITHUB_OUTPUT"
-          echo "JAR created: $JAR"
+          echo "Created: $JAR"
 
-      - name: Upload JAR Artifact
+      - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
           name: PSSMP-${{ matrix.name }}
