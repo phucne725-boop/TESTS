@@ -31,7 +31,6 @@ jobs:
         with:
           distribution: temurin
           java-version: '25'
-          cache: maven
 
       - name: Check ZIP
         shell: bash
@@ -41,10 +40,15 @@ jobs:
             exit 1
           fi
 
+          echo "ZIP found: ${{ matrix.zip }}"
+
       - name: Extract ZIP
+        shell: bash
         run: |
           mkdir -p build-source
           unzip -q "${{ matrix.zip }}" -d build-source
+
+          echo "Source extracted successfully"
 
       - name: Find Maven Project
         id: project
@@ -53,12 +57,12 @@ jobs:
           POM=$(find build-source -name pom.xml -print -quit)
 
           if [ -z "$POM" ]; then
-            echo "::error::pom.xml not found"
+            echo "::error::pom.xml not found inside ZIP"
             exit 1
           fi
 
           echo "pom=$POM" >> "$GITHUB_OUTPUT"
-          echo "Found project: $POM"
+          echo "Found Maven project: $POM"
 
       - name: Fix Paper API Version
         shell: bash
@@ -69,10 +73,11 @@ jobs:
             's/26\.1\.2-R0\.1-SNAPSHOT/[26.3.build,)/g' \
             "$POM"
 
-          echo "Paper API dependency:"
-          grep -n -A2 -B2 "paper-api" "$POM"
+          echo "Paper API configuration:"
+          grep -n -A3 -B2 "paper-api" "$POM"
 
       - name: Build with Maven
+        shell: bash
         run: |
           mvn -U -B \
             -f "${{ steps.project.outputs.pom }}" \
@@ -88,14 +93,14 @@ jobs:
             | head -n 1)
 
           if [ -z "$JAR" ]; then
-            echo "::error::No JAR produced"
+            echo "::error::No JAR file was generated"
             exit 1
           fi
 
           echo "path=$JAR" >> "$GITHUB_OUTPUT"
-          echo "Created: $JAR"
+          echo "Generated JAR: $JAR"
 
-      - name: Upload JAR
+      - name: Upload JAR Artifact
         uses: actions/upload-artifact@v4
         with:
           name: PSSMP-${{ matrix.name }}
