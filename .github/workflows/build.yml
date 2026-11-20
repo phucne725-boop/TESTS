@@ -1,81 +1,45 @@
 
-name: PSSMP Core Build
+name: PSSMP API Part 1
 
 on:
   push:
     branches:
       - main
+      - master
+
   pull_request:
     branches:
       - main
+      - master
+
   workflow_dispatch:
 
 jobs:
   build:
+    name: Build API JAR
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Lấy source từ GitHub
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Cài Java 25
       - name: Setup Java 25
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '25'
+          cache: maven
 
-      # 3. Cài Maven
-      - name: Setup Maven
-        uses: stCarolas/setup-maven@v5
-        with:
-          maven-version: '3.9.9'
+      - name: Check Java version
+        run: java -version
 
-      # 4. Giải nén ZIP source
-      - name: Extract PSSMP Source
-        run: |
-          mkdir -p source
+      - name: Build with Maven
+        run: mvn -B -U clean verify
 
-          ZIP_FILE=$(find . -maxdepth 1 -type f -iname "*.zip" | head -n 1)
-
-          if [ -z "$ZIP_FILE" ]; then
-            echo "ERROR: Cannot find source ZIP!"
-            exit 1
-          fi
-
-          echo "Extracting: $ZIP_FILE"
-          unzip -o "$ZIP_FILE" -d source
-
-      # 5. Tìm pom.xml
-      - name: Locate Maven Project
-        id: project
-        run: |
-          POM=$(find source -name pom.xml -print -quit)
-
-          if [ -z "$POM" ]; then
-            echo "ERROR: pom.xml not found!"
-            exit 1
-          fi
-
-          echo "Found pom.xml: $POM"
-          echo "pom=$POM" >> "$GITHUB_OUTPUT"
-
-      # 6. Build plugin
-      - name: Build PSSMP
-        run: |
-          mvn -B -U -f "${{ steps.project.outputs.pom }}" clean package -DskipTests
-
-      # 7. Tìm và kiểm tra JAR
-      - name: Verify JAR
-        run: |
-          find source -path "*/target/*.jar" -type f
-          test -n "$(find source -path "*/target/*.jar" -type f ! -name '*-sources.jar' ! -name '*-javadoc.jar')"
-
-      # 8. Xuất JAR
-      - name: Upload PSSMP JAR
+      - name: Upload PSSMP API JAR
         uses: actions/upload-artifact@v4
         with:
-          name: PSSMP-Core-1.0
-          path: source/**/target/*.jar
+          name: PSSMP-API-Part-1
+          path: target/pssmp-api-1.0.0.jar
           if-no-files-found: error
+          retention-days: 30
