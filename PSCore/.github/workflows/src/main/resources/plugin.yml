@@ -1,0 +1,35 @@
+
+name: PSCore
+version: 1.0.0
+main: vn.phutsmile.pscore.PSCore
+api-version: '1.21'
+author: PhutSmileSmp
+description: Core plugin for PhutSmileSmp
+
+softdepend:
+  - Vault
+  - Essentials
+  - EssentialsX
+  - Geyser-Spigot
+  - floodgate
+
+commands:
+  bal:
+    description: Xem so du tai khoan
+    usage: /bal [player]
+    aliases:
+      - balance
+      - money
+
+  pay:
+    description: Chuyen tien cho nguoi choi
+    usage: /pay <player> <amount>
+
+permissions:
+  pscore.balance.others:
+    description: Xem so du nguoi choi khac
+    default: op
+
+  pscore.pay:
+    description: Su dung lenh chuyen tien
+    default: true
