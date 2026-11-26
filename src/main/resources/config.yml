@@ -1,0 +1,50 @@
+
+# ==================================
+# PSCore - PhutSmileSmp
+# Main configuration
+# ==================================
+
+server:
+  name: "PhutSmileSmp"
+  short-name: "PS-SMP"
+  address: "ps-smp.play.jumphosting.cloud"
+
+settings:
+  language: "vi"
+  debug: false
+
+economy:
+  enabled: true
+  provider: "Vault"
+
+  messages:
+    prefix: "&8[&bPS-SMP&8] "
+    balance: "&aSo du cua ban: &e%money%"
+    balance-other: "&aSo du cua %player%: &e%money%"
+    pay-success: "&aBan da chuyen &e%amount% &acho &f%player%&a."
+    pay-received: "&aBan nhan duoc &e%amount% &atu &f%player%&a."
+    insufficient: "&cBan khong du tien."
+    invalid-amount: "&cSo tien khong hop le."
+    player-not-found: "&cKhong tim thay nguoi choi."
+    self-payment: "&cBan khong the chuyen tien cho chinh minh."
+    economy-unavailable: "&cHe thong tien te hien khong kha dung."
+
+database:
+  type: "sqlite"
+  file: "database.db"
+
+auction:
+  enabled: true
+  listing-fee: 0
+  expire-after-days: 0
+  items-per-page: 45
+
+scoreboard:
+  enabled: true
+  update-interval-ticks: 40
+
+staff:
+  temporary-admin:
+    enabled: true
+    default-role: "ADMIN"
+    grant-op: false
