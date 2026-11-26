@@ -33,7 +33,7 @@ public final class DatabaseManager {
         File databaseFile = new File(folder, fileName);
 
         try {
-            Class.forName("org.sqlite.JDBC");
+            Class.forName("vn.phutsmile.pscore.libs.sqlite.JDBC");
         } catch (ClassNotFoundException exception) {
             throw new SQLException("SQLite driver is missing.", exception);
         }
