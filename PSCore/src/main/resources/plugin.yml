@@ -1,0 +1,38 @@
+
+name: PSCore
+version: 1.0.0
+main: vn.phuc.pscore.PSCore
+api-version: '1.21'
+author: Phuc
+description: PhutSmileSmp Core
+
+softdepend:
+  - Vault
+
+commands:
+  bal:
+    description: Xem so du
+    usage: /bal [player]
+  pay:
+    description: Chuyen tien
+    usage: /pay <player> <amount>
+  stats:
+    description: Xem thong tin
+    usage: /stats [player]
+  ah:
+    description: Auction House
+    usage: /ah [sell <price>|search <keyword>]
+  staffrole:
+    description: Gan vai tro
+    usage: /staffrole <player> <role> [minutes]
+    permission: pscore.staffrole
+  staffunrole:
+    description: Xoa vai tro
+    usage: /staffunrole <player>
+    permission: pscore.staffrole
+
+permissions:
+  pscore.staffrole:
+    default: op
+  pscore.admin:
+    default: op
