@@ -1,0 +1,38 @@
+
+general:
+  prefix: "&b&lPSCore &8»"
+  currency-symbol: "$"
+
+server:
+  address: "ps-smp.play.jumphosting.cloud"
+
+database:
+  file: "database.db"
+
+scoreboard:
+  enabled: true
+  title: "&b&lPHUTSMILE SMP"
+  update-ticks: 40
+  show-role: true
+  show-balance: true
+  show-playtime: true
+  show-server-address: true
+
+auction:
+  enabled: true
+  listing-fee: 0
+  expiry-hours: 0
+  max-listings-per-player: 0
+  page-size: 45
+
+roles:
+  ADMIN:
+    prefix: "&c&l[ADMIN]"
+  STAFF:
+    prefix: "&b&l[STAFF]"
+  MEDIA:
+    prefix: "&d&l[MEDIA]"
+  SPECTATOR:
+    prefix: "&7&l[SPECTATOR]"
+  SYSTEM:
+    prefix: "&6&l[SYSTEM]"
