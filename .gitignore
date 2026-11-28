@@ -1,0 +1,19 @@
+
+target/
+.idea/
+.vscode/
+*.iml
+*.class
+*.log
+.DS_Store
+Thumbs.db
+
+# Local server data
+plugins/PSCore/data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Temporary files
+*.tmp
+*.bak
