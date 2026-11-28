@@ -1,0 +1,19 @@
+
+# Database configuration
+
+sqlite:
+  filename: "pscore.db"
+  foreign-keys: true
+  journal-mode: "WAL"
+  synchronous: "FULL"
+  busy-timeout-ms: 5000
+
+transactions:
+  enabled: true
+  recovery-on-startup: true
+  preserve-incomplete-transactions: true
+
+backups:
+  enabled: true
+  directory: "backups"
+  keep-last: 10
