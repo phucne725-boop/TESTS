@@ -1,0 +1,11 @@
+
+name: PSCore
+version: 0.1.0-BETA
+main: vn.phuc.pscore.PSCore
+api-version: '1.21'
+authors:
+  - PhutSmileSmp
+description: Core economy and gameplay plugin for PhutSmileSmp
+
+load: POSTWORLD
+prefix: PSCore
