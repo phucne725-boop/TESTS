@@ -1,0 +1,38 @@
+
+# PSCore main configuration
+
+server:
+  name: "PS-Smp"
+  address: "ps-smp.play.jumphosting.cloud"
+
+general:
+  language: "vi"
+  debug: false
+
+database:
+  type: "sqlite"
+  file: "data/pscore.db"
+  busy-timeout-ms: 5000
+
+economy:
+  starting-balance: 0
+  currency-symbol: "$"
+  allow-negative-balance: false
+
+scoreboard:
+  enabled: true
+  update-interval-ticks: 20
+  show-server-address-when-disabled: true
+
+teleport:
+  countdown-seconds: 5
+  cancel-on-movement: true
+  cancel-in-combat: true
+  rtp-cooldown-seconds: 60
+
+combat:
+  duration-seconds: 20
+
+security:
+  max-input-length: 64
+  max-transaction-retries: 3
