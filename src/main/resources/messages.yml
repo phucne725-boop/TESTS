@@ -1,0 +1,33 @@
+
+prefix: "&8[&bPSCore&8] "
+
+general:
+  no-permission: "&cBạn không có quyền sử dụng chức năng này."
+  player-only: "&cLệnh này chỉ dành cho người chơi."
+  player-not-found: "&cKhông tìm thấy người chơi."
+  invalid-usage: "&cCú pháp không hợp lệ."
+  internal-error: "&cĐã xảy ra lỗi. Dữ liệu của bạn được giữ an toàn."
+  reloaded: "&aĐã tải lại cấu hình."
+
+economy:
+  invalid-amount: "&cSố tiền không hợp lệ."
+  insufficient-funds: "&cBạn không đủ tiền."
+  payment-success: "&aGiao dịch thành công."
+  payment-failed: "&cGiao dịch thất bại. Vui lòng thử lại."
+
+transaction:
+  processing: "&eĐang xử lý giao dịch..."
+  recovering: "&eĐang khôi phục giao dịch chưa hoàn tất."
+  cancelled: "&cGiao dịch đã bị hủy."
+  completed: "&aGiao dịch hoàn tất."
+
+teleport:
+  countdown: "&eDịch chuyển sau &f{seconds} &egiây."
+  cancelled: "&cĐã hủy dịch chuyển."
+  cooldown: "&cBạn cần chờ thêm &f{seconds} &cgiây."
+  in-combat: "&cBạn không thể dịch chuyển khi đang trong giao tranh."
+
+auction:
+  listing-created: "&aĐã đăng bán vật phẩm."
+  listing-unavailable: "&cVật phẩm này không còn khả dụng."
+  invalid-price: "&cGiá bán không hợp lệ. Vật phẩm của bạn không bị mất."
